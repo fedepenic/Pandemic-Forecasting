@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"golang.org/x/net/html"
 )
@@ -24,31 +25,27 @@ func main() {
         log.Fatalf("Error parsing HTML: %v", err)
     }
 
-    // Find and print the content of divs with class "newsdate_div"
-    printDivContentByClass(doc, "newsdate_div")
+    // Print the contents of <script type="text/javascript"> tags containing "graph-cases-daily"
+    printScriptContents(doc, "graph-cases-daily")
 }
 
-// Recursive function to find and print the content of divs by class
-func printDivContentByClass(n *html.Node, targetClass string) {
-    if n.Type == html.ElementNode && n.Data == "div" {
-        classVal := getAttributeValue(n, "class")
-        if classVal == targetClass {
-            fmt.Println(getTextContent(n))
+// Recursive function to print the contents of <script type="text/javascript"> tags
+// if they contain the specified string.
+func printScriptContents(n *html.Node, targetString string) {
+    if n.Type == html.ElementNode && n.Data == "script" {
+        for _, attr := range n.Attr {
+            if attr.Key == "type" && attr.Val == "text/javascript" {
+                content := getTextContent(n)
+                if strings.Contains(content, targetString) {
+                    // Print the content of the script tag
+                    fmt.Println(content)
+                }
+            }
         }
     }
     for c := n.FirstChild; c != nil; c = c.NextSibling {
-        printDivContentByClass(c, targetClass)
+        printScriptContents(c, targetString)
     }
-}
-
-// Helper function to get the value of an attribute for an HTML node
-func getAttributeValue(n *html.Node, attrName string) string {
-    for _, a := range n.Attr {
-        if a.Key == attrName {
-            return a.Val
-        }
-    }
-    return ""
 }
 
 // Helper function to get the text content of an HTML node and its descendants
