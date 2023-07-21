@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"regexp"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -25,27 +26,48 @@ func main() {
         log.Fatalf("Error parsing HTML: %v", err)
     }
 
-    // Print the contents of <script type="text/javascript"> tags containing "graph-cases-daily"
-    printScriptContents(doc, "graph-cases-daily")
+    // Get the content of <script type="text/javascript"> tags containing "graph-cases-daily"
+    content := getScriptContents(doc, "graph-cases-daily")
+
+    re := regexp.MustCompile(`categories:\s*\[(.*?)\]`)
+
+    match := re.FindStringSubmatch(content)
+
+	var finalContent string
+
+	if len(match) > 1 {
+		// Extracted content is in match[1]
+		categoriesContent := match[1]
+		finalContent = "[" + categoriesContent + "]"
+	} else {
+		finalContent = "Categories not found in the input."
+	}
+
+	fmt.Println(finalContent)
 }
 
-// Recursive function to print the contents of <script type="text/javascript"> tags
-// if they contain the specified string.
-func printScriptContents(n *html.Node, targetString string) {
+// Recursive function to get the contents of <script type="text/javascript"> tags
+// if they contain the specified string and return it as a string.
+func getScriptContents(n *html.Node, targetString string) string {
     if n.Type == html.ElementNode && n.Data == "script" {
         for _, attr := range n.Attr {
             if attr.Key == "type" && attr.Val == "text/javascript" {
                 content := getTextContent(n)
                 if strings.Contains(content, targetString) {
-                    // Print the content of the script tag
-                    fmt.Println(content)
+                    // Return the content of the script tag
+                    return content
                 }
             }
         }
     }
+    var scriptContent string
     for c := n.FirstChild; c != nil; c = c.NextSibling {
-        printScriptContents(c, targetString)
+        scriptContent = getScriptContents(c, targetString)
+        if scriptContent != "" {
+            return scriptContent
+        }
     }
+    return ""
 }
 
 // Helper function to get the text content of an HTML node and its descendants
