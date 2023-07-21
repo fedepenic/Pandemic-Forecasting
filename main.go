@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -32,13 +33,32 @@ func main() {
 
 	// Extract content using the specified regular expression
 	extractedContent := extractContent(content, `data:\s*\[(.*?)\]`)
-    // extractedContentDates := extractContent(content, `categories:\s*\[(.*?)\]`)
+    extractedContentDates := extractContent(content, `categories:\s*\[(.*?)\]`)
 
     arr := convertStringToArray(extractedContent)
+
+    arrDates, err := convertStringDatesToArray(extractedContentDates)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
 	fmt.Println(len(arr))
+    fmt.Println(len(arrDates))
+    fmt.Println(arrDates)
 
 	// fmt.Println(extractedContent)
     // fmt.Println(extractedContentDates)
+}
+
+func convertStringDatesToArray(str string) ([]string, error) {
+	var arr []string
+	err := json.Unmarshal([]byte(str), &arr)
+	if err != nil {
+		return nil, err
+	}
+
+	return arr, nil
 }
 
 func convertStringToArray(str string) []int {
