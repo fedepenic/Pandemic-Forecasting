@@ -29,7 +29,23 @@ func main() {
     // Get the content of <script type="text/javascript"> tags containing "graph-cases-daily"
     content := getScriptContents(doc, "graph-cases-daily")
 
-    re := regexp.MustCompile(`categories:\s*\[(.*?)\]`)
+    // re := regexp.MustCompile(`categories:\s*\[(.*?)\]`)
+
+    // match := re.FindStringSubmatch(content)
+
+	// var finalContent string
+
+	// if len(match) > 1 {
+	// 	// Extracted content is in match[1]
+	// 	categoriesContent := match[1]
+	// 	finalContent = "[" + categoriesContent + "]"
+	// } else {
+	// 	finalContent = "Categories not found in the input."
+	// }
+
+	// fmt.Println(finalContent)
+
+    re := regexp.MustCompile(`data:\s*\[(.*?)\]`)
 
     match := re.FindStringSubmatch(content)
 
@@ -44,6 +60,8 @@ func main() {
 	}
 
 	fmt.Println(finalContent)
+
+    // fmt.Println(content)
 }
 
 // Recursive function to get the contents of <script type="text/javascript"> tags
