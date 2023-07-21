@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -31,10 +32,34 @@ func main() {
 
 	// Extract content using the specified regular expression
 	extractedContent := extractContent(content, `data:\s*\[(.*?)\]`)
-    extractedContentDates := extractContent(content, `categories:\s*\[(.*?)\]`)
+    // extractedContentDates := extractContent(content, `categories:\s*\[(.*?)\]`)
 
-	fmt.Println(extractedContent)
-    fmt.Println(extractedContentDates)
+    arr := convertStringToArray(extractedContent)
+	fmt.Println(len(arr))
+
+	// fmt.Println(extractedContent)
+    // fmt.Println(extractedContentDates)
+}
+
+func convertStringToArray(str string) []int {
+	// Step 1: Parse the string into a slice of strings
+	str = strings.Trim(str, "[]") // Remove square brackets from the string
+	strArr := strings.Split(str, ",")
+
+	// Step 2: Convert the slice of strings into a slice of integers
+	var intArr []int
+	for _, s := range strArr {
+		// Replace "null" with "0" and parse the string to an integer
+		if s == "null" {
+			intArr = append(intArr, 0)
+		} else {
+			if num, err := strconv.Atoi(s); err == nil {
+				intArr = append(intArr, num)
+			}
+		}
+	}
+
+	return intArr
 }
 
 // Recursive function to get the contents of <script type="text/javascript"> tags
