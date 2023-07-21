@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -33,22 +35,41 @@ func main() {
 
 	// Extract content using the specified regular expression
 	extractedContent := extractContent(content, `data:\s*\[(.*?)\]`)
-    extractedContentDates := extractContent(content, `categories:\s*\[(.*?)\]`)
+	extractedContentDates := extractContent(content, `categories:\s*\[(.*?)\]`)
 
-    arr := convertStringToArray(extractedContent)
-
-    arrDates, err := convertStringDatesToArray(extractedContentDates)
+	arr := convertStringToArray(extractedContent)
+	arrDates, err := convertStringDatesToArray(extractedContentDates)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 
-	fmt.Println(len(arr))
-    fmt.Println(len(arrDates))
-    fmt.Println(arrDates)
+	// Verify that the length of arr and arrDates match
+	if len(arr) != len(arrDates) {
+		fmt.Println("Error: Lengths of arrays do not match.")
+		return
+	}
 
-	// fmt.Println(extractedContent)
-    // fmt.Println(extractedContentDates)
+	// Create and open the CSV file
+	file, err := os.Create("data.csv")
+	if err != nil {
+		log.Fatalf("Error creating CSV file: %v", err)
+	}
+	defer file.Close()
+
+	// Create a CSV writer
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	// Write the CSV header
+	writer.Write([]string{"Date", "Value"})
+
+	// Write data rows to CSV
+	for i := 0; i < len(arr); i++ {
+		writer.Write([]string{arrDates[i], strconv.Itoa(arr[i])})
+	}
+
+	fmt.Println("CSV data successfully written to data.csv.")
 }
 
 func convertStringDatesToArray(str string) ([]string, error) {

@@ -1,10 +1,9 @@
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 
 def read_csv(file_path):
-    date_parser = lambda x: pd.to_datetime(x, format='%d %B %Y')
+    date_parser = lambda x: pd.to_datetime(x, format='%b %d, %Y')  # Change the date format here
     return pd.read_csv(file_path, parse_dates=['Date'], date_parser=date_parser, index_col='Date')
 
 def fit_arima(data, order):
