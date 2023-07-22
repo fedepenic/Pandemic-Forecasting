@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
@@ -70,6 +71,23 @@ func main() {
 	}
 
 	fmt.Println("CSV data successfully written to data.csv.")
+
+	pythonFilename := "example.py"
+	if erroro := runPythonFile(pythonFilename); erroro != nil {
+		fmt.Println(erroro) // Print the correct error variable
+	}
+}
+
+func runPythonFile(filename string) error {
+	cmd := exec.Command("python", filename)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+	if err != nil {
+		return fmt.Errorf("failed to run Python file: %s", err)
+	}
+	return nil
 }
 
 func convertStringDatesToArray(str string) ([]string, error) {
