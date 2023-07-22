@@ -46,6 +46,10 @@ def main():
     print("Forecasted values:")
     print(forecast_df)
 
+    # Save the forecasted values to a CSV file
+    output_csv_path = 'forecasted_values.csv'
+    forecast_df.to_csv(output_csv_path, index_label='date', header=['new_cases'])
+
     # Optionally, you can plot the forecasted values
     plt.figure(figsize=(10, 5))
     plt.plot(df, label='Original Data')
