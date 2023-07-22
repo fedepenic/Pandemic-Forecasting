@@ -50,13 +50,19 @@ def main():
     output_csv_path = 'forecasted_values.csv'
     forecast_df.to_csv(output_csv_path, index_label='date', header=['new_cases'])
 
-    # Optionally, you can plot the forecasted values
+    # Plot the forecasted values
     plt.figure(figsize=(10, 5))
     plt.plot(df, label='Original Data')
     plt.plot(forecast_df, label='Forecasted Data', linestyle='dashed', marker='o')
     plt.xlabel('Date')
     plt.ylabel('Value')
     plt.legend()
+
+    # Save the plot as a PNG file
+    output_plot_path = 'forecast_plot.png'
+    plt.savefig(output_plot_path)
+
+    # Show the plot
     plt.show()
 
 if __name__ == "__main__":
