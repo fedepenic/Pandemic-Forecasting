@@ -28,20 +28,22 @@ func main() {
 		log.Fatalf("Error parsing HTML: %v", err)
 	}
 
-	content := getScriptContents(doc, "graph-cases-daily")
+	//The data from the daily cases graph is obtained. 
+	scriptContent := getScriptContent(doc, "graph-cases-daily")
 
-	extractedContent := extractContent(content, `data:\s*\[(.*?)\]`)
-	extractedContentDates := extractContent(content, `categories:\s*\[(.*?)\]`)
+	//Using regular expressions, the dates and their respective new Covid cases are obtained. 
+	newCases := extractContent(scriptContent, `data:\s*\[(.*?)\]`)
+	dates := extractContent(scriptContent, `categories:\s*\[(.*?)\]`)
 
-	arr := convertStringToArray(extractedContent)
-	arrDates, err := convertStringDatesToArray(extractedContentDates)
+	newCasesArray := convertStringToArray(newCases)
+	datesArray, err := convertStringDatesToArray(dates)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 
-	if len(arr) != len(arrDates) {
-		fmt.Println("Error: Lengths of arrays do not match.")
+	if len(newCasesArray) != len(datesArray) {
+		fmt.Println("Error: Lengths of the arrays do not match.")
 		return
 	}
 
@@ -56,8 +58,8 @@ func main() {
 
 	writer.Write([]string{"Date", "Value"})
 
-	for i := 0; i < len(arr); i++ {
-		writer.Write([]string{arrDates[i], strconv.Itoa(arr[i])})
+	for i := 0; i < len(newCasesArray); i++ {
+		writer.Write([]string{datesArray[i], strconv.Itoa(newCasesArray[i])})
 	}
 
 	fmt.Println("CSV data successfully written to data.csv.")
@@ -91,7 +93,7 @@ func convertStringToArray(str string) []int {
 	return intArr
 }
 
-func getScriptContents(n *html.Node, targetString string) string {
+func getScriptContent(n *html.Node, targetString string) string {
 	if n.Type == html.ElementNode && n.Data == "script" {
 		for _, attr := range n.Attr {
 			if attr.Key == "type" && attr.Val == "text/javascript" {
@@ -104,7 +106,7 @@ func getScriptContents(n *html.Node, targetString string) string {
 	}
 	var scriptContent string
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		scriptContent = getScriptContents(c, targetString)
+		scriptContent = getScriptContent(c, targetString)
 		if scriptContent != "" {
 			return scriptContent
 		}
