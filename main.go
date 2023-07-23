@@ -36,7 +36,7 @@ func main() {
 	dates := extractContent(scriptContent, `categories:\s*\[(.*?)\]`)
 
 	newCasesArray := convertStringToArray(newCases)
-	datesArray, err := convertStringDatesToArray(dates)
+	datesArray, err := convertDatesStringToArray(dates)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -65,7 +65,7 @@ func main() {
 	fmt.Println("CSV data successfully written to data.csv.")
 }
 
-func convertStringDatesToArray(str string) ([]string, error) {
+func convertDatesStringToArray(str string) ([]string, error) {
 	var arr []string
 	err := json.Unmarshal([]byte(str), &arr)
 	if err != nil {
