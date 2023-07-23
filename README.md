@@ -15,7 +15,7 @@
 In order to run the program on Windows, open a CMD on the project directory and type the following command:
 
 ```
-run-predictions.bat
+$ run-predictions.bat
 ```
 
 ### Unix like systems (Linux, macOS, etc)
@@ -23,8 +23,8 @@ run-predictions.bat
 In order to run the program on unix like systems, open a terminal on the project directory and type the following two commands:
 
 ```
-run main.go
-python prediction.py
+$ go run main.go
+$ python prediction.py
 ```
 
-Alternatively, an script could be made in order to run both commands with a single instruction, similar to what was done on Windows.
+Alternatively, a script could be made in order to run both commands with a single instruction, similar to what was done on Windows.
