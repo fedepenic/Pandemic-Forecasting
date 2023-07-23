@@ -2,4 +2,4 @@
 
 go run main.go
 
-python example.py
+python prediction.py

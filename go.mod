@@ -1,4 +1,4 @@
-module github.com/Pandemic-Forecasting
+module Pandemic-Forecasting
 
 go 1.20
 
