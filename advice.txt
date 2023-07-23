@@ -1,0 +1,8 @@
+Some actions may be taken to enhance the system in the future. Some of these actions include:
+- Relying on a more consistent data source: Currently, the data is being scraped from an external website, which lacks complete consistency. Since the website may change the way it displays data, this could lead to errors during the scraping process.
+- Implementing data verification mechanisms: To ensure data accuracy and reliability, incorporating data verification methods can be highly beneficial. These mechanisms can help identify and rectify any discrepancies or inconsistencies in the data.
+
+And to improve the forecast accuracy, additional types of data can be considered, such as:
+- Vaccination Data: Monitoring the vaccination rate is essential in forecasting how the virus might spread in the future. Data on the number of vaccinated individuals, the types of vaccines administered, and the coverage rates over time can be relevant factors to consider when making predictions.
+- Public Health Measures: Data on the implementation and relaxation of public health measures, such as lockdowns, mask mandates, social distancing guidelines, and travel restrictions, can help model the effectiveness of these interventions on controlling the spread of the virus.
+- Mobility Data: Incorporating mobility data can be highly valuable as it provides insights into people's movement patterns, which can influence the spread of the virus.
